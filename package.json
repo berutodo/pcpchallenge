@@ -1,0 +1,26 @@
+{
+    "name": "backendchallenge",
+    "version": "1.0.0",
+    "description": "��#\u0000 \u0000p\u0000c\u0000p\u0000c\u0000h\u0000a\u0000l\u0000l\u0000e\u0000n\u0000g\u0000e\u0000\r\u0000 \u0000",
+    "main": "index.js",
+    "type": "module",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/berutodo/pcpchallenge.git"
+    },
+    "author": "",
+    "license": "ISC",
+    "bugs": {
+        "url": "https://github.com/berutodo/pcpchallenge/issues"
+    },
+    "homepage": "https://github.com/berutodo/pcpchallenge#readme",
+    "dependencies": {
+        "@fastify/formbody": "^7.4.0",
+        "@fastify/static": "^6.11.2",
+        "fastify": "^4.23.2",
+        "sqlite3": "^5.1.6"
+    }
+}
