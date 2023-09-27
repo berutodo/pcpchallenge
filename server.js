@@ -22,28 +22,23 @@ fastify.get('/', async(request, reply) => {
     return reply.sendFile('index.html');
 });
 
-// Route for handling user registration
 fastify.post('/register', async(request, reply) => {
     let db = new sqlite3.Database('./users.db');
-    const { username, email, password } = request.body;
 
-    // Use the registerUser function to handle user registration
-    db.get("SELECT * FROM users WHERE username = ?", [username], (err, user) => {
-        if (err) {
-            reply.code(500).send({ message: "Deu erro ae pvt" });
+    const username = request.body.username;
+    const email = request.body.email;
+    const password = request.body.password;
+
+    const insertQuery = 'INSERT INTO users (username, email, password) VALUES (?, ?, ?)';
+
+    db.run(insertQuery, [username, email, password], function(insertErr) {
+        if (insertErr) {
+            console.error('Erro ao inserir dados', insertErr.message);
+        } else {
+            console.log(`Dados inseridos com sucesso. ID do usuário: ${this.lastID}`);
         }
-        if (user) {
-            // Username already exists
-            reply.code(400).send({ message: "Username already exists" });
-        }
-        db.run("INSERT INTO users (username, email, password) VALUES (?, ?, ?)", [username, email, password], (err) => {
-            if (err) {
-                reply.code(500).send({ message: "Deu erro ao inserir o usuário" });
-            } else {
-                reply.code(200).send({ message: "User registered successfully" });
-            }
-        });
     });
+
     return reply.send(request.body)
 });
 
