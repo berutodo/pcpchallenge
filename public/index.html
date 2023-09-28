@@ -6,18 +6,34 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    <link rel="stylesheet" type="text/css" href="/public/css/style.css">
 </head>
+<script>
+    function validateForm() {
+        let name = document.forms["registerform"]["username"].value
+        console.log(name)
+        return false
+    }
+</script>
 
 <body>
-    <form action="/register" method="post">
-        <label for="username">Username: </label>
-        <input type="text" name="username" id="username" required>
-        <label for="email">Email: </label>
-        <input type="email" name="email" id="email">
-        <label for="password">Password: </label>
-        <input type="password" name="password" id="password" required>
-        <button type="submit">Criar Conta</button>
-    </form>
+    <main>
+        <form name="registerForm" action="/register" onsubmit="return validateForm()" method="post">
+            <div>
+                <label for="username">Username: </label>
+                <input type="text" name="username" id="username">
+            </div>
+            <div>
+                <label for="email">Email: </label>
+                <input type="email" name="email" id="email">
+            </div>
+            <div>
+                <label for="password">Password: </label>
+                <input type="password" name="password" id="password" required>
+            </div>
+            <button type="submit">Criar Conta</button>
+        </form>
+    </main>
 </body>
 
 </html>

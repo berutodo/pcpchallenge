@@ -15,6 +15,7 @@ fastify.register(fastifyStatic, {
     root: path.join(__dirname, 'public'),
     prefix: '/public/'
 });
+
 fastify.register(formBody);
 
 // Route for the root ("/") URL
@@ -29,17 +30,35 @@ fastify.post('/register', async(request, reply) => {
     const email = request.body.email;
     const password = request.body.password;
 
-    const insertQuery = 'INSERT INTO users (username, email, password) VALUES (?, ?, ?)';
 
-    db.run(insertQuery, [username, email, password], function(insertErr) {
-        if (insertErr) {
-            console.error('Erro ao inserir dados', insertErr.message);
+    const sql = 'SELECT * FROM users WHERE username = ?';
+    const verificarUsuario = db.get(sql, [username], (err, row) => {
+        if (err) {
+            console.error('Erro ao consultar o banco de dados:', err);
         } else {
-            console.log(`Dados inseridos com sucesso. ID do usuário: ${this.lastID}`);
+            if (row) {
+                console.log('Username encontrado no banco de dados:', row);
+                return true
+            } else {
+                // O username não existe no banco de dados
+                console.log('Username não encontrado no banco de dados');
+                return false
+            }
         }
     });
 
-    return reply.send(request.body)
+    if (verificarUsuario) {
+        reply.code(409).send({ error: "Usuario existe" })
+    } else {
+        const insertQuery = 'INSERT INTO users (username, email, password) VALUES (?, ?, ?)';
+        const createUser = db.run(insertQuery, [username, email, password], function(insertErr) {
+            if (insertErr) {
+                console.error('Erro ao inserir dados', insertErr.message);
+            } else {
+                console.log(`Dados inseridos com sucesso. ID do usuário: ${this.lastID}`);
+            }
+        });
+    }
 });
 
 
