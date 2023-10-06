@@ -4,6 +4,7 @@ import formBody from '@fastify/formbody';
 import path from 'path';
 import sqlite3 from "sqlite3";
 import { fileURLToPath } from 'url';
+import jwt from 'jsonwebtoken';
 
 const __filename = fileURLToPath(
     import.meta.url);
@@ -60,6 +61,26 @@ fastify.post('/register', async(request, reply) => {
         });
     }
 });
+fastify.get('/login', (request, reply) => {
+    reply.sendFile('login.html')
+})
+fastify.post('/login', (request, reply) => {
+    const { username, password } = request.body
+    let db = new sqlite3.Database("users.db")
+    const loginUser = db.get("SELECT * FROM users WHERE username = ? AND password = ?", [username, password], (err, row) => {
+        if (err) {
+            console.error("Database error:", err);
+            reply.code(500).send({ error: "Database error" });
+        } else if (!row) {
+            console.error("Authentication failed for user:", username);
+            reply.code(401).send({ error: "Authentication failed" });
+        } else {
+            const token = jwt.sign({ userId: row.id }, "Bearer", { expiresIn: 300 })
+            console.log("User authenticated:", row.username);
+            reply.code(200).send({ auth: true, token })
+        }
+    })
+})
 
 
 // Run the server

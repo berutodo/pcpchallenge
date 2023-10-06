@@ -4,7 +4,7 @@ const db = new sqlite3.Database('./users.db');
 
 // Create a table to store user data
 db.serialize(() => {
-    db.run(`CREATE TABLE IF NOT EXISTS users (id INTEGER PRIMARY KEY AUTOINCREMENT, username TEXT, password TEXT, email TEXT)`);
+    db.run(`CREATE TABLE IF NOT EXISTS users (id INTEGER PRIMARY KEY AUTOINCREMENT, username TEXT NOT NULL, password TEXT NOT NULL, email TEXT NOT NULL)`);
 
     // Sample user data (replace with your own data)
     const userData = [
