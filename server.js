@@ -11,7 +11,6 @@ const __filename = fileURLToPath(
 const __dirname = path.dirname(__filename);
 const fastify = Fastify({ logger: true });
 
-// Serve static files from the "public" directory
 fastify.register(fastifyStatic, {
     root: path.join(__dirname, 'public'),
     prefix: '/public/'
@@ -19,7 +18,6 @@ fastify.register(fastifyStatic, {
 
 fastify.register(formBody);
 
-// Route for the root ("/") URL
 fastify.get('/', async(request, reply) => {
     return reply.sendFile('index.html');
 });
@@ -83,7 +81,6 @@ fastify.post('/login', (request, reply) => {
 })
 
 
-// Run the server
 fastify.listen({ port: 3000 }, (err) => {
     if (err) {
         fastify.log.error(err);
