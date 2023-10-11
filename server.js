@@ -5,6 +5,7 @@ import path from 'path';
 import sqlite3 from "sqlite3";
 import { fileURLToPath } from 'url';
 import jwt from 'jsonwebtoken';
+import auth from './src/middlewares/auth.js';
 
 const __filename = fileURLToPath(
     import.meta.url);
@@ -21,6 +22,9 @@ fastify.register(formBody);
 fastify.get('/', async(request, reply) => {
     return reply.sendFile('index.html');
 });
+fastify.get('/brewries', { preHandler: auth }, (request, reply) => {
+    reply.send({ msg: "We are here" })
+})
 
 fastify.post('/register', async(request, reply) => {
     let db = new sqlite3.Database('./users.db');
@@ -60,6 +64,9 @@ fastify.post('/register', async(request, reply) => {
     }
 });
 fastify.get('/login', (request, reply) => {
+    if (request.headers.auth == true) {
+        reply.send({ err: "Usuario ja logado" })
+    }
     reply.sendFile('login.html')
 })
 fastify.post('/login', (request, reply) => {
