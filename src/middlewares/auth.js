@@ -1,7 +1,7 @@
 import jwt from "jsonwebtoken";
 
 async function auth(request, reply) {
-    const apiKey = request.headers["x-acess-token"];
+    const apiKey = request.cookies.token
     const authSecret = "Bearer";
 
     try {

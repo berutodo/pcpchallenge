@@ -1,11 +1,14 @@
 import Fastify from 'fastify';
 import fastifyStatic from '@fastify/static';
+import fastifyCookie from '@fastify/cookie';
 import formBody from '@fastify/formbody';
 import path from 'path';
 import sqlite3 from "sqlite3";
 import { fileURLToPath } from 'url';
 import jwt from 'jsonwebtoken';
 import auth from './src/middlewares/auth.js';
+
+import config from "./config.mjs"
 
 const __filename = fileURLToPath(
     import.meta.url);
@@ -16,11 +19,14 @@ fastify.register(fastifyStatic, {
     root: path.join(__dirname, 'public'),
     prefix: '/public/'
 });
+fastify.register(fastifyCookie, {
+    secret: "Mybigsecret"
+})
 
 fastify.register(formBody);
 
 fastify.get('/', async(request, reply) => {
-    return reply.sendFile('index.html');
+    return reply.sendFile('login.html');
 });
 fastify.get('/brewries', { preHandler: auth }, (request, reply) => {
     reply.send({ msg: "We are here" })
@@ -63,11 +69,8 @@ fastify.post('/register', async(request, reply) => {
         });
     }
 });
-fastify.get('/login', (request, reply) => {
-    if (request.headers.auth == true) {
-        reply.send({ err: "Usuario ja logado" })
-    }
-    reply.sendFile('login.html')
+fastify.get('/register', (request, reply) => {
+    reply.sendFile('index.html')
 })
 fastify.post('/login', (request, reply) => {
     const { username, password } = request.body
@@ -81,6 +84,10 @@ fastify.post('/login', (request, reply) => {
             reply.code(401).send({ error: "Authentication failed" });
         } else {
             const token = jwt.sign({ userId: row.id }, "Bearer", { expiresIn: 300 })
+            reply.setCookie("token", token, {
+                path: "/",
+                httpOnly: true
+            })
             console.log("User authenticated:", row.username);
             reply.code(200).send({ auth: true, token })
         }

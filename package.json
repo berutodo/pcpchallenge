@@ -18,6 +18,7 @@
     },
     "homepage": "https://github.com/berutodo/pcpchallenge#readme",
     "dependencies": {
+        "@fastify/cookie": "^9.1.0",
         "@fastify/formbody": "^7.4.0",
         "@fastify/static": "^6.11.2",
         "fastify": "^4.23.2",
