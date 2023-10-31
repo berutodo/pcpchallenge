@@ -7,6 +7,7 @@ import sqlite3 from "sqlite3";
 import { fileURLToPath } from 'url';
 import jwt from 'jsonwebtoken';
 import auth from './src/middlewares/auth.js';
+import fetch from "node-fetch"
 
 import config from "./config.mjs"
 
@@ -28,8 +29,14 @@ fastify.register(formBody);
 fastify.get('/', async(request, reply) => {
     return reply.sendFile('login.html');
 });
-fastify.get('/brewries', { preHandler: auth }, (request, reply) => {
-    reply.send({ msg: "We are here" })
+fastify.get('/brewries', { preHandler: auth }, async(request, reply) => {
+    const fetchData = async() => {
+        const response = await fetch("https://api.openbrewerydb.org/breweries");
+        const data = await response.json();
+        return data;
+    };
+    const data = await fetchData()
+    reply.send({ msg: data })
 })
 
 fastify.post('/register', async(request, reply) => {
