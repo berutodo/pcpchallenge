@@ -56,7 +56,6 @@ fastify.post('/register', async(request, reply) => {
                 console.log('Username encontrado no banco de dados:', row);
                 return true
             } else {
-                // O username não existe no banco de dados
                 console.log('Username não encontrado no banco de dados');
                 return false
             }
