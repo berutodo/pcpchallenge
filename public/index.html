@@ -8,17 +8,10 @@
     <title>Document</title>
     <link rel="stylesheet" type="text/css" href="/public/css/style.css">
 </head>
-<script>
-    function validateForm() {
-        let name = document.forms["registerform"]["username"].value
-        console.log(name)
-        return false
-    }
-</script>
 
 <body>
     <main>
-        <form name="registerForm" action="/register" onsubmit="return validateForm()" method="post">
+        <form name="registerForm" action="/register" method="post">
             <div>
                 <label for="username">Username: </label>
                 <input type="text" name="username" id="username">
