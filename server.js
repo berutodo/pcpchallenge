@@ -10,6 +10,7 @@ import auth from './src/middlewares/auth.js';
 import fetch from "node-fetch"
 
 import config from "./config.mjs"
+import { brewriesRoute } from './src/middlewares/routes/brewries.js';
 
 const __filename = fileURLToPath(
     import.meta.url);
@@ -29,15 +30,7 @@ fastify.register(formBody);
 fastify.get('/', async(request, reply) => {
     return reply.sendFile('login.html');
 });
-fastify.get('/brewries', { preHandler: auth }, async(request, reply) => {
-    const fetchData = async() => {
-        const response = await fetch("https://api.openbrewerydb.org/breweries");
-        const data = await response.json();
-        return data;
-    };
-    const data = await fetchData()
-    reply.send({ msg: data })
-})
+fastify.get('/brewries', { preHandler: auth }, brewriesRoute)
 
 fastify.post('/register', async(request, reply) => {
     let db = new sqlite3.Database('./users.db');
