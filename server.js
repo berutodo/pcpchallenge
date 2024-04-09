@@ -22,13 +22,13 @@ fastify.register(fastifyStatic, {
     prefix: '/public/'
 });
 fastify.register(fastifyCookie, {
-    secret: "Mybigsecret"
+    secret: config.jwtSecret
 })
 
 fastify.register(formBody);
 
 fastify.get('/', async(request, reply) => {
-    return reply.sendFile('login.html');
+    return reply.sendFile('index.html');
 });
 fastify.get('/brewries', { preHandler: auth }, brewriesRoute)
 
@@ -68,9 +68,7 @@ fastify.post('/register', async(request, reply) => {
         });
     }
 });
-fastify.get('/register', (request, reply) => {
-    reply.sendFile('index.html')
-})
+
 fastify.post('/login', (request, reply) => {
     const { username, password } = request.body
     let db = new sqlite3.Database("users.db")
